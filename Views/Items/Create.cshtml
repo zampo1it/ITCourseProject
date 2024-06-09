@@ -1,0 +1,183 @@
+﻿@using System.Resources
+@using ITProjectTryThree.Controllers
+@using ITProjectTryThree.Models.ViewModels
+@model CreateItemViewModel
+@{
+    ViewData["Title"] = "Create";
+    var col = @Model.ThisCollection;
+    var culture = Context.Request.Cookies["Culture"];
+    string lang = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+    ResourceManager rm = new ResourceManager($"ITProjectTryThree.Resources.Strings-{lang}", typeof(HomeController).Assembly);
+}
+
+<h1>@rm.GetString("sCreate1")</h1>
+
+<h4>@rm.GetString("sItem")</h4>
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <p>@rm.GetString("sCreateLogin")</p>
+    <a asp-action="Index" class="btn btn-primary">@rm.GetString("sCollections")</a>
+
+}
+else if (Model.ThisCollection.Owner != User.Identity.Name && User.IsInRole("user"))
+{
+    <p>@rm.GetString("sNotOwner")</p>
+    <a asp-action="Index" class="btn btn-primary">@rm.GetString("sCollections")</a>
+}
+else
+{
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post" asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ThisItem.Id" value="0" />
+                <input type="hidden" asp-for="ThisItem.Owner" value="@Model.ThisCollection.Owner" />
+                <input type="hidden" asp-for="ThisItem.CollectionId" value="@Model.ThisCollection.id" />
+                <input type="hidden" asp-for="ThisItem.ImagePathString" value="qwerty" />
+                <input type="hidden" asp-for="ThisCollection" />
+
+                <div class="form-group" hidden>
+                    <label asp-for="ThisItem.CollectionId" class="control-label"></label>
+                    <input asp-for="ThisItem.CollectionId" class="form-control" />
+                    <span asp-validation-for="ThisItem.CollectionId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group" hidden>
+                    <label asp-for="ThisItem.Owner" class="control-label"></label>
+                    <input asp-for="ThisItem.Owner" class="form-control" />
+                    <span asp-validation-for="ThisItem.Owner" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ThisItem.Title" class="control-label">@rm.GetString("sTitle")</label>
+                    <input asp-for="ThisItem.Title" class="form-control" />
+                    <span asp-validation-for="ThisItem.Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ThisItem.Description" class="control-label">@rm.GetString("sDescription")</label>
+                    <input asp-for="ThisItem.Description" class="form-control" />
+                    <span asp-validation-for="ThisItem.Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ThisItem.Image" class="control-label">@rm.GetString("sImage")</label>
+                    <input type="file" asp-for="ThisItem.Image" class="form-control" data-val="false" accept="image/*" />
+                    <span asp-validation-for="ThisItem.Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ThisItem.Tags" class="control-label">@rm.GetString("sTags") @rm.GetString("sSep")</label>
+                    <input asp-for="ThisItem.Tags" class="form-control" data-val="false" />
+                    <span asp-validation-for="ThisItem.Tags" class="text-danger"></span>
+                </div>
+                @if (col.IntName1 != null)
+                {
+                    <div class="form-group">
+                        <label asp-for="ThisItem.IntCustom1" class="control-label">
+                            @col.IntName1.ToString()
+                        </label>
+                        <input asp-for="ThisItem.IntCustom1" class="form-control" type="number" min="@int.MinValue" max="@int.MaxValue" />
+                        <span asp-validation-for="ThisItem.IntCustom1" class="text-danger"></span>
+                    </div>
+                }
+                @if (col.IntName2 != null)
+                {
+                    <div class="form-group">
+                        <label asp-for="ThisItem.IntCustom2" class="control-label">
+                            @col.IntName2.ToString()
+                        </label>
+                        <input asp-for="ThisItem.IntCustom2" class="form-control" type="number" min="@int.MinValue" max="@int.MaxValue" />
+                        <span asp-validation-for="ThisItem.IntCustom2" class="text-danger"></span>
+                    </div>
+                }
+
+                @if (col.IntName3 != null)
+                {
+                    <div class="form-group">
+                        <label asp-for="ThisItem.IntCustom3" class="control-label">
+                            @col.IntName3.ToString()
+                        </label>
+                        <input asp-for="ThisItem.IntCustom3" class="form-control" type="number" min="@int.MinValue" max="@int.MaxValue" />
+                        <span asp-validation-for="ThisItem.IntCustom3" class="text-danger"></span>
+                    </div>
+                }
+
+                @if (col.StringName1 != null)
+                {
+                    <div class="form-group">
+                        <label asp-for="ThisItem.StringCustom1" class="control-label">
+                            @col.StringName1.ToString()
+                        </label>
+                        <input asp-for="ThisItem.StringCustom1" class="form-control" />
+                        <span asp-validation-for="ThisItem.StringCustom1" class="text-danger"></span>
+                    </div>
+                }
+
+                @if (col.StringName2 != null)
+                {
+                    <div class="form-group">
+                        <label asp-for="ThisItem.StringCustom2" class="control-label">
+                            @col.StringName2.ToString()
+                        </label>
+                        <input asp-for="ThisItem.StringCustom2" class="form-control" />
+                        <span asp-validation-for="ThisItem.StringCustom2" class="text-danger"></span>
+                    </div>
+                }
+
+                @if (col.StringName3 != null)
+                {
+                    <div class="form-group">
+                        <label asp-for="ThisItem.StringCustom3" class="control-label">
+                            @col.StringName3.ToString()
+                        </label>
+                        <input asp-for="ThisItem.StringCustom3" class="form-control" />
+                        <span asp-validation-for="ThisItem.StringCustom3" class="text-danger"></span>
+                    </div>
+                }
+
+                @if (col.BoolName1 != null)
+                {
+                    <p></p>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="ThisItem.BoolCustom1" /> @col.BoolName1.ToString()
+                        </label>
+                    </div>
+                }
+
+                @if (col.BoolName2 != null)
+                {
+                    <p></p>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="ThisItem.BoolCustom2" /> @col.BoolName2.ToString()
+                        </label>
+                    </div>
+                }
+
+                @if (col.BoolName3 != null)
+                {
+                    <p></p>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="ThisItem.BoolCustom3" /> @col.BoolName3.ToString()
+                        </label>
+                    </div>
+                }
+                <p></p>
+                <div class="form-group">
+                    <input type="submit" value="@rm.GetString("sCreateNew")" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <p></p>
+    <div>
+        <a asp-area="" asp-controller="Collections" asp-action="Details" asp-route-id="@col.id" class="btn btn-sm btn-primary">@rm.GetString("sBackToCollection")</a>
+    </div>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

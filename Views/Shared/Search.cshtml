@@ -1,0 +1,114 @@
+﻿@using System.Resources
+@using ITProjectTryThree.Controllers
+@using ITProjectTryThree.Models.ViewModels
+@model SearchViewModel
+@{
+    var culture = Context.Request.Cookies["Culture"];
+    string lang = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+    ResourceManager rm = new ResourceManager($"ITProjectTryThree.Resources.Strings-{lang}", typeof(HomeController).Assembly);
+}
+
+<h1>@rm.GetString("sSearchResults"): @Model.SearchString</h1>
+
+@if (!Model.SearchString.StartsWith("#"))
+{
+    <h3>@rm.GetString("sFound") @Model.Collections.Count @rm.GetString("sCollectionsFound")</h3>
+    @if (@Model.Collections.Count != 0)
+    {
+        <table class="table my-table myTableFourth">
+            <tr>
+                <th>
+                    @rm.GetString("sOwner")
+                </th>
+                <th>
+                    @rm.GetString("sCollectionName")
+                </th>
+                <th>
+                    @rm.GetString("sCollectionType")
+                </th>
+                <th></th>
+            </tr>
+            @foreach (var u in Model.Collections)
+            {
+                <tr>
+                    <td>@u.Owner</td>
+                    <td>@u.Title</td>
+                    <td>@u.Type</td>
+                    <td>
+                        <form method="post">
+                            <a asp-action="Details" asp-controller="Collections" asp-route-id="@u.id" class="btn btn-primary btn-sm">@rm.GetString("sView")</a>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    <p></p>
+    <h3>@rm.GetString("sFound") @Model.Items.Count @rm.GetString("sElementsFound")</h3>
+    @if (@Model.Items.Count != 0)
+    {
+        <table class="table my-table myTableThird">
+            <tr>
+                <th>
+                    @rm.GetString("sOwner")
+                </th>
+                <th>
+                    @rm.GetString("sTitle")
+                </th>
+                <th></th>
+            </tr>
+            @foreach (var u in Model.Items)
+            {
+                <tr>
+                    <td>@u.Owner</td>
+                    <td>@u.Title</td>
+                    <td>
+                        <form method="post">
+                            <a asp-action="Details" asp-controller="Items" asp-route-id="@u.Id" class="btn btn-primary btn-sm">@rm.GetString("sView")</a>
+                        </form>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    }
+} else
+{
+    <h3>@rm.GetString("sFound") @Model.Items.Count @rm.GetString("sTags")</h3>
+    @if (@Model.Items.Count != 0)
+    {
+        <table class="table my-table myTableFourth">
+            <tr>
+                <th>
+                    @rm.GetString("sOwner")
+                </th>
+                <th>
+                    @rm.GetString("sTitle")
+                </th>
+                <th>
+                    @rm.GetString("sTags")
+                </th>
+                <th></th>
+            </tr>
+            @foreach (var u in Model.Items)
+            {
+                <tr>
+                    <td>@u.Owner</td>
+                    <td>@u.Title</td>
+                    <td>
+                        @foreach (var tag in u.TagsList)
+                        {
+                            <a href="@Url.Action("Search", "Home", new { query = tag })">@tag</a>
+                        }
+                    </td>
+                    <td>
+                        <form method="post">
+                            <a asp-action="Details" asp-controller="Items" asp-route-id="@u.Id" class="btn btn-primary btn-sm">@rm.GetString("sView")</a>
+                        </form>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    }
+}

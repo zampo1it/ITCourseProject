@@ -1,0 +1,145 @@
+﻿@using System.Resources
+@using ITProjectTryThree.Controllers
+@using ITProjectTryThree.Models.ViewModels
+@model DetailsItemViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    var culture = Context.Request.Cookies["Culture"];
+    string lang = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+    ResourceManager rm = new ResourceManager($"ITProjectTryThree.Resources.Strings-{lang}", typeof(HomeController).Assembly);
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<h1>@rm.GetString("sDetails")</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <img src="@Model.item.ImagePathString" alt="Image" style="max-width: 800px; max-height: 512px;">
+        </div>
+
+        <div class="col-md-4">
+            <h1 class="my-4">@Model.item.Title</h1>
+            <h3>
+                <a asp-area="" asp-controller="Collections" asp-action="Details" asp-route-id="@Model.collection.id">@Model.collection.Title</a>
+            </h3>
+            <h3 class="my-3">@rm.GetString("sItemDetails")</h3>
+            <h5 class="my-3">@rm.GetString("sCollectionType"):</h5>
+            @Model.collection.Type
+            <h5 class="my-3">@rm.GetString("sDescription"):</h5>
+            <p>@Model.item.Description</p>
+            @if (Model.collection.StringName1 != null)
+            {
+                <h5 class="my-3">@Model.collection.StringName1</h5>
+                <p>@Model.item.StringCustom1</p>
+            }
+            @if (Model.collection.StringName2 != null)
+            {
+                <h5 class="my-3">@Model.collection.StringName2</h5>
+                <p>@Model.item.StringCustom2</p>
+            }
+            @if (Model.collection.StringName3 != null)
+            {
+                <h5 class="my-3">@Model.collection.StringName3</h5>
+                <p>@Model.item.StringCustom3</p>
+            }
+
+            @if (Model.collection.IntName1 != null)
+            {
+                <li>@Model.collection.IntName1 - @Model.item.IntCustom1</li>
+            }
+            @if (Model.collection.IntName2 != null)
+            {
+                <li>@Model.collection.IntName2 - @Model.item.IntCustom2</li>
+            }
+            @if (Model.collection.IntName3 != null)
+            {
+                <li>@Model.collection.IntName3 - @Model.item.IntCustom3</li>
+            }
+
+            @if (Model.collection.BoolName1 != null)
+            {
+                <li>@Model.collection.BoolName1 - @Model.item.BoolCustom1</li>
+            }
+            @if (Model.collection.BoolName2 != null)
+            {
+                <li>@Model.collection.BoolName2 - @Model.item.BoolCustom2</li>
+            }
+            @if (Model.collection.BoolName3 != null)
+            {
+                <li>@Model.collection.BoolName3 - @Model.item.BoolCustom3</li>
+            }
+            <p><h3>@rm.GetString("sTags"):</p></h3>
+            <form asp-controller="Home" asp-action="Search" method="get">
+                @foreach (var tag in Model.item.TagsList)
+                {
+                    <a href="@Url.Action("Search", "Home", new { query = tag })">@tag</a>
+                }
+            </form>
+
+            <h3 class="my-3">@rm.GetString("sLikeIt")</h3>
+            <div class="my-3">
+                <ul class="my-3" id="likes"></ul>
+            </div>
+            <ul>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <span class="likebtn-wrapper" data-theme="large" data-i18n_like="Like" data-ef_voting="heartbeat" data-show_like_label="false" data-popup_width="300" data-share_size="large"></span>
+                }
+                else
+                {
+                    <h5>@rm.GetString("sLikeLogin")</h5>
+                }
+            </ul>
+        </div>
+
+    </div>
+    <h3 class="my-4">@rm.GetString("sComments")</h3>
+    <div class="container">
+        @foreach (var comment in Model.comments)
+        {
+            <div class="card mb-3">
+                <div class="card-body collectionForm">
+                    <h5 class="card-title">@comment.UserName</h5>
+                    <h6 class="card-subtitle">@comment.DateTime</h6>
+                    <p class="card-text">@comment.Message</p>
+                </div>
+            </div>
+        }
+        <div id="messagesList"></div>
+    </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="container">
+            <br />
+            <textarea rows="3" placeholder="@rm.GetString("sYourComment")" id="message" class="form-control"></textarea>
+            <input type="submit" id="SendMessage" value="@rm.GetString("sSendMessage")" onclick="sendMessage()" class="btn btn-primary" />
+        </div>
+    }
+    else
+    {
+        <h5>@rm.GetString("sCommentLogin")</h5>
+    }
+</div>
+
+<script>(function (d, e, s) { if (d.getElementById("likebtn_wjs")) return; a = d.createElement(e); m = d.getElementsByTagName(e)[0]; a.async = 1; a.id = "likebtn_wjs"; a.src = s; m.parentNode.insertBefore(a, m) })(document, "script", "//w.likebtn.com/js/w/widget.js");</script>
+<script src="~/js/likeButton.js"></script>
+<script>
+    function sendMessage() {
+        var currentUser = '@User.Identity.Name';
+        var message = $('#message').val();
+        var currentItemId = '@Model.item.Id';
+        var test = '@Model.item.Id';
+
+        $.ajax({
+            url: '@Url.Action("SendMessage", "Items")',
+            type: 'POST',
+            data: { user: currentUser, message: message, id: currentItemId },
+            success: function (response) {
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+    }</script>

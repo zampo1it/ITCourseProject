@@ -1,0 +1,50 @@
+﻿@using System.Resources
+@using ITProjectTryThree.Controllers
+@using ITProjectTryThree.Models.ViewModels
+@model AdminViewModel
+
+@{
+    ViewData["Title"] = "Users";
+    var culture = Context.Request.Cookies["Culture"];
+    string lang = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+    ResourceManager rm = new ResourceManager($"ITProjectTryThree.Resources.Strings-{lang}", typeof(HomeController).Assembly);
+
+}
+
+<div class="table-responsive">
+    <table class="table my-table">
+        <tr>
+            <th style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">@rm.GetString("sUsername")</th>
+            <th style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">@rm.GetString("sRole")</th>
+            <th style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">@rm.GetString("sStatus")</th>
+            <th></th>
+        </tr>
+        @for (int i = 0; i < Model.Users.Count(); i++)
+        {
+            <form method="post">
+            <tr>
+                <td>@Model.Users[i].Email</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" asp-action="ChangeRole" asp-controller="Admin" asp-route-id="@Model.Users[i].Id">@Model.Roles[i]</a>
+
+                </td>
+                <td>
+
+                        @if (Model.Users[i].LockoutEnd == null)
+                        {
+                        <a class="btn btn-primary btn-sm" asp-action="Block" asp-controller="Admin" asp-route-id="@Model.Users[i].Id">Block</a>
+                        }
+                        else
+                        {
+                        <a class="btn btn-primary btn-sm" asp-action="Unblock" asp-controller="Admin" asp-route-id="@Model.Users[i].Id">Unblock</a>
+                        }
+                </td>
+                <td>
+                    <a class="btn btn-primary btn-sm" asp-action="Delete" asp-controller="Admin" asp-route-id="@Model.Users[i].Id">Delete</a>
+                </td>
+            </tr>
+            </form>
+        }
+    </table>
+
+</div>

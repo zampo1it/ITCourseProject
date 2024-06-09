@@ -1,0 +1,39 @@
+﻿<form asp-action="CreateTicket" method="post">
+    <h1>Create ticket to JIRA</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Summary" class="font-weight-bold">Summary</label>
+                    <input type="text" name="Summary" class="form-control" required />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Description" class="font-weight-bold">Description</label>
+                    <textarea name="Description" class="form-control" required></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Priority" class="font-weight-bold">Priority</label>
+                    <select name="Priority" class="form-control">
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <p></p>
+        <div class="row">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary">Create ticket</button>
+            </div>
+        </div>
+    </div>
+</form>

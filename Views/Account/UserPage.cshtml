@@ -1,0 +1,111 @@
+﻿@using ITProjectTryThree.Controllers
+@using ITProjectTryThree.Models.ViewModels
+@using Microsoft.AspNetCore.Identity
+@using ITProjectTryThree.Models;
+@using System.Globalization;
+@using System.Resources
+@inject SignInManager<IdentityUser> SignInManager;
+@inject UserManager<IdentityUser> UserManager;
+@model UserPageViewModel;
+@{
+    var culture = Context.Request.Cookies["Culture"];
+    string lang = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+    ResourceManager rm = new ResourceManager($"ITProjectTryThree.Resources.Strings-{lang}", typeof(HomeController).Assembly);
+    var currentUser = await UserManager.GetUserAsync(User);
+}
+
+@if (currentUser.LockoutEnd != null)
+{
+    <div class="alert alert-danger">
+        @rm.GetString("sAccountBlocked")
+    </div>
+}
+else
+{
+    <div class="container">
+        <h1>@rm.GetString("sHello"), @Model.UserName!</h1>
+        <h2>@rm.GetString("sWanna")</h2>
+        <p>
+            <form method="post">
+                <a asp-area="" asp-controller="Collections" asp-action="Create" class="btn btn-primary">@rm.GetString("sCreateCollection")</a>
+            </form>
+        </p>
+    </div>
+
+    <div class="album py-5">
+        <div class="container collectionForm">
+            @if (Model.Collections.Count() == 0)
+            {
+                <div class="row">
+                    <h2>
+                        @rm.GetString("sNoCollectionsYet")
+                    </h2>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <h3>
+                        @rm.GetString("sYourCollections")
+                    </h3>
+                    @foreach (var collection in Model.Collections)
+                    {
+                        <div class="col-md-4">
+                            <div class="card mb-4 shadow-sm collectionRows">
+                                @switch (collection.Type)
+                                {
+                                    case CollectionType.Soft:
+                                        <img src="https://i.ibb.co/0ZNykKS/Soft.png" class="card-img-top" alt="..." style="width: 100px; height: 100px;">
+                                        break;
+                                    case CollectionType.Game:
+                                        <img src="https://i.ibb.co/5M5m2jz/Games.png" class="card-img-top" alt="..." style="width: 100px; height: 100px;">
+                                        break;
+                                    case CollectionType.Music:
+                                        <img src="https://i.ibb.co/7Nqw4tW/Music.png" class="card-img-top" alt="..." style="width: 100px; height: 100px;">
+                                        break;
+                                    case CollectionType.Movie:
+                                        <img src="https://i.ibb.co/L1K6CsH/Movies.png" class="card-img-top" alt="..." style="width: 100px; height: 100px;">
+                                        break;
+                                    case CollectionType.Book:
+                                        <img src="https://i.ibb.co/ySQ0cTG/Books.png" class="card-img-top" alt="..." style="width: 100px; height: 100px;">
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                <div class="card-body">
+                                    <h5 class="card-title">@collection.Title</h5>
+                                    <p class="card-text">@collection.Description</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <a asp-area="" asp-controller="Collections" asp-action="Details" asp-route-id="@collection.id" class="btn btn-sm btn-primary">@rm.GetString("sView")</a>
+                                            <a asp-area="" asp-controller="Collections" asp-action="Edit" asp-route-id="@collection.id" class="btn btn-sm btn-warning">@rm.GetString("sEdit")</a>
+                                            <a asp-area="" asp-controller="Collections" asp-action="Delete" asp-route-id="@collection.id" class="btn btn-sm btn-danger">@rm.GetString("sDelete")</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+        </div>
+        <p></p>
+        <div class="row">
+            <h3>
+                Tickets:
+            </h3>
+
+            @foreach (var ticket in UserPageViewModel.UserTickets)
+            {
+                if (ticket.Value == User.Identity.Name)
+                {
+                    var issueKey = ticket.Key.Value<string>("key");
+                    var issueUrl = $"https://itprojecttrythree202405100141003.atlassian.net/browse/{issueKey}";
+                    <a href="@issueUrl">@issueKey</a>
+                }
+            }
+
+        </div>
+    </div>
+}

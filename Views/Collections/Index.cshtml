@@ -1,0 +1,130 @@
+﻿@using System.Resources
+@using ITProjectTryThree.Controllers
+@model IEnumerable<ITProjectTryThree.Models.Collection>
+
+@{
+    ViewData["Title"] = "Index";
+    var culture = Context.Request.Cookies["Culture"];
+    string lang = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+    ResourceManager rm = new ResourceManager($"ITProjectTryThree.Resources.Strings-{lang}", typeof(HomeController).Assembly);
+}
+
+<h1>@rm.GetString("sCollections")</h1>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <a asp-action="Create" class="btn btn-primary">@rm.GetString("sCreateNew")</a>
+}
+<div class="d-flex justify-content-end">
+    <select id="filterSelect" class="form-control ml-2" style="width: 150px;">
+        <option>All</option>
+        <option>Movie</option>
+        <option>Game</option>
+        <option>Music</option>
+        <option>Soft</option>
+        <option>Book</option>
+    </select>
+    <button onclick="filter()" class="btn btn-primary btn-sm ml-2">@rm.GetString("sFilter")</button>
+</div>
+
+
+<div class="table-responsive">
+    <table class="table my-table">
+        <thead>
+            <tr>
+                <th style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                    <span>@rm.GetString("sOwner")</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                    <span>@rm.GetString("sTitle")</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                    <span>@rm.GetString("sType")</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                    <span>@rm.GetString("sDescription")</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                    <span>@rm.GetString("sOptionalNumberForTable")</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                    <span>@rm.GetString("sOptionalNumberForTable")</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                    <span>@rm.GetString("sOptionalNumberForTable")</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                    <span>@rm.GetString("sOptionalTextForTable")</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                    <span>@rm.GetString("sOptionalTextForTable")</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                    <span>@rm.GetString("sOptionalTextForTable")</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                    <span>@rm.GetString("sOptionalCheckboxForTable")</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                    <span>@rm.GetString("sOptionalCheckboxForTable")</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                    <span>@rm.GetString("sOptionalCheckboxForTable")</span>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.Owner)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.IntName1)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.IntName2)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.IntName3)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.StringName1)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.StringName2)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.StringName3)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.BoolName1)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.BoolName2)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; max-width: 100px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.BoolName3)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <div class="btn-group">
+                            <a asp-action="Details" asp-route-id="@item.id" class="btn btn-primary btn-sm">@rm.GetString("sView")</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script src="~/js/filterTable.js"></script>

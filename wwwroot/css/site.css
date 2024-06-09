@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&family=Permanent+Marker&family=Poetsen+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&family=Poetsen+One&display=swap');
+
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+
+.menuBg {
+    background: var(--header1);
+    background: var(--header2);
+    background: var(--header3);
+    background: var(--header4);
+    background: var(--header5);
+    background: var(--header6);
+    background: var(--header7);
+}
+
+
+
+.containerBordered {
+    border-right: 1px solid #dee2e6;
+    border-left: 1px solid #dee2e6;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+    /* Hide default HTML checkbox */
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+
+.my-table {
+    background-color: var(--primary-page-table);
+    color: var(--primary-text-color);
+    text-align: center;
+}
+
+.collectionForm {
+    background-color: var(--primary-page-table);
+}
+
+.collectionRows {
+    background-color: var(--deadCells);
+}
+
+.my-table th {
+    background-color: #000000;
+    color: #fff;
+    padding: 10px;
+}
+
+.my-table td {
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+
+.myTableThird td:nth-child(3) {
+    width: 50px;
+}
+
+.myTableFourth td:nth-child(4) {
+    width: 50px;
+}
+
+body {
+    background-color: var(--primary-page-bg);
+    color: var(--primary-text-color);
+    --primary-page-table: rgb(226, 226, 226);
+    --primary-page-bg: rgb(255, 255, 255);
+    --accent-color: #f21a1a;
+    --primary-text-color: #312d2d;
+    --title-panel-bg: #F2F2F2;
+    --snippet-panel-bg: #FDFDFD;
+    --read-more-btn-bg: var(--primare-text-color);
+    --read-more-btn-color: var(--snippet-panel-bg);
+    --divider-bg: var(--title-panel-bg);
+    --deadCells: #ffffff;
+    --header1: rgba(19,6,120,1);
+    --header2: -moz-linear-gradient(left, rgba(19,6,120,1) 0%, rgba(23,8,158,1) 31%, rgba(36,12,245,1) 51%, rgba(94,76,255,1) 71%, rgba(156,145,255,1) 100%);
+    --header3: -webkit-gradient(left top, right top, color-stop(0%, rgba(19,6,120,1)), color-stop(31%, rgba(23,8,158,1)), color-stop(51%, rgba(36,12,245,1)), color-stop(71%, rgba(94,76,255,1)), color-stop(100%, rgba(156,145,255,1)));
+    --header4: -webkit-linear-gradient(left, rgba(19,6,120,1) 0%, rgba(23,8,158,1) 31%, rgba(36,12,245,1) 51%, rgba(94,76,255,1) 71%, rgba(156,145,255,1) 100%);
+    --header5: -o-linear-gradient(left, rgba(19,6,120,1) 0%, rgba(23,8,158,1) 31%, rgba(36,12,245,1) 51%, rgba(94,76,255,1) 71%, rgba(156,145,255,1) 100%);
+    --header6: -ms-linear-gradient(left, rgba(19,6,120,1) 0%, rgba(23,8,158,1) 31%, rgba(36,12,245,1) 51%, rgba(94,76,255,1) 71%, rgba(156,145,255,1) 100%);
+    --header7: linear-gradient(to right, rgba(19,6,120,1) 0%, rgba(23,8,158,1) 31%, rgba(36,12,245,1) 51%, rgba(94,76,255,1) 71%, rgba(156,145,255,1) 100%);
+    margin-bottom: 60px;
+    margin-top: 150px;
+    font-family: "Merienda", cursive;
+    font-optical-sizing: auto;
+    font-weight: <weight>;
+    font-style: normal;
+}
+
+    body.dark {
+        --primary-page-table: rgb(69, 69, 69);
+        --primary-page-bg: #383838;
+        --primary-text-color: #F2F2F2;
+        --title-panel-bg: #353D44;
+        --snippet-panel-bg: #32362B;
+        --read-more-btn-bg: #F2F2F2;
+        --read-more-btn-color: #21262B;
+        --deadCells: #111111;
+        --header1: rgb(40, 39, 47);
+        --header2: -moz-linear-gradient(left, rgb(33, 32, 36) 0%, rgb(65, 65, 68) 31%, rgb(107, 107, 112) 51%, rgb(162, 160, 172) 71%, rgb(186, 184, 199) 100%);
+        --header3: -webkit-gradient(left top, right top, color-stop(0%, rgba(33, 32, 36)), color-stop(31%, rgba(65, 65, 68)), color-stop(51%, rgba(107, 107, 112)), color-stop(71%, rgba(162, 160, 172)), color-stop(100%, rgba(186, 184, 199)));
+        --header4: -webkit-linear-gradient(left, rgba(33, 32, 36) 0%, rgba(65, 65, 68) 31%, rgba(107, 107, 112) 51%, rgba(162, 160, 172) 71%, rgba(186, 184, 199) 100%);
+        --header5: -o-linear-gradient(left, rgba(33, 32, 36) 0%, rgba(65, 65, 68) 31%, rgba(107, 107, 112) 51%, rgba(162, 160, 172) 71%, rgba(186, 184, 199) 100%);
+        --header6: -ms-linear-gradient(left, rgba(33, 32, 36) 0%, rgba(65, 65, 68) 31%, rgba(107, 107, 112) 51%, rgba(162, 160, 172) 71%, rgba(186, 184, 199) 100%);
+        --header7: linear-gradient(to right, rgba(33, 32, 36) 0%, rgba(65, 65, 68) 31%, rgba(107, 107, 112) 51%, rgba(162, 160, 172) 71%, rgba(186, 184, 199) 100%);
+    }
+

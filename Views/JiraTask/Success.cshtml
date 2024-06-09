@@ -1,0 +1,19 @@
+﻿@using System.Resources
+@using ITProjectTryThree.Controllers
+@using Microsoft.AspNetCore.Identity
+@model JiraTaskViewModel
+
+@*
+
+*@
+@{
+    var culture = Context.Request.Cookies["Culture"];
+    string lang = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+    ResourceManager rm = new ResourceManager($"ITProjectTryThree.Resources.Strings-{lang}", typeof(HomeController).Assembly);
+    var issueKey = Model.ticket.Value<string>("key");
+    var issueUrl = $"https://itprojecttrythree202405100141003.atlassian.net/browse/{issueKey}";
+}
+
+<h1>Ticket created succesfully!</h1>
+<h2>Name is @issueKey;</h2>
+<h2>URL: <a href="@issueUrl">@issueUrl</a>.</h2>

@@ -1,0 +1,155 @@
+﻿@using ITProjectTryThree.Controllers
+@using ITProjectTryThree.Models.ViewModels
+@using KnowledgePicker.WordCloud
+@using KnowledgePicker.WordCloud.Coloring
+@using KnowledgePicker.WordCloud.Drawing
+@using KnowledgePicker.WordCloud.Layouts
+@using KnowledgePicker.WordCloud.Primitives
+@using KnowledgePicker.WordCloud.Sizers
+@using Microsoft.AspNetCore.Identity
+@using System.Resources
+@using Sdcb.WordClouds
+@using SkiaSharp
+@inject SignInManager<IdentityUser> SignInManager
+@model HomeViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+    var culture = Context.Request.Cookies["Culture"];
+    string lang = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+    ResourceManager rm = new ResourceManager($"ITProjectTryThree.Resources.Strings-{lang}", typeof(HomeController).Assembly);
+    List<string> alltags = Model.Items.SelectMany(u => u.TagsList).Distinct().ToList(); 
+    Dictionary<string, int> tagCounts = new Dictionary<string, int>(); 
+    foreach (var item in Model.Items)
+    {
+        foreach (var tag in item.TagsList)
+        {
+            if (tagCounts.ContainsKey(tag))
+            {
+                tagCounts[tag]++;
+            }
+            else
+            {
+                tagCounts[tag] = 1;
+            }
+        }
+    }
+}
+
+@{
+    IEnumerable<WordCloudEntry> wordEntries = tagCounts.Select(p => new WordCloudEntry(p.Key, p.Value));
+
+    var wordCloud = new WordCloudInput(wordEntries)
+            {
+                Width = 800,
+                Height = 200,
+                MinFontSize = 14,
+                MaxFontSize = 34
+            };
+    var sizer = new LogSizer(wordCloud);
+    using var engine = new SkGraphicEngine(sizer, wordCloud);
+    var layout = new SpiralLayout(wordCloud);
+    var colorizer = new RandomColorizer();
+    var wcg = new WordCloudGenerator<SKBitmap>(wordCloud, engine, layout, colorizer);
+    IEnumerable<(LayoutItem Item, double FontSize)> items = wcg.Arrange();
+
+}
+
+<div class="text-center">
+    <h1 class="display-4" style="font-family: 'Permanent Marker', cursive;">@rm.GetString("sCreate")</h1>
+</div>
+<p></p>
+<div class="text-center">
+    <img src="https://i.ibb.co/Sw0kCs4/3.png" alt="Social Media Wallpaper" style="width: 100%; margin: 0 auto;" />
+</div>
+<p></p>
+
+<svg viewBox="0,0,@wordCloud.Width,@wordCloud.Height">
+    @foreach (var (item, fontSize) in items)
+    {
+        const string format = "0.##";
+        var x = (int)((item.Location.X - item.Measured.Left));
+        var y = (int)(item.Location.Y - item.Measured.Top);
+        var fs = Convert.ToDouble((fontSize).ToString(format));
+        var color = wcg.GetColorHexString(item);
+
+        <text>
+            <text x=@x y=@y font-size=@fs fill="@color">
+                <a href="@Url.Action("Search", "Home", new { query = item.Entry.Word })">@item.Entry.Word</a>
+            </text>
+        </text>
+    }
+</svg>
+
+<section class="jumbotron text-center">
+    <h1>@rm.GetString("sNewly")</h1>
+</section>
+<table class="table my-table myTableFourth">
+    <tr>
+        <th>
+            @rm.GetString("sOwner")
+        </th>
+        <th>
+            @rm.GetString("sCollectionName")
+        </th>
+        <th>
+            @rm.GetString("sCollectionType")
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var u in Model.Collections)
+    {
+        <tr>
+            <td>@u.Owner</td>
+            <td>@u.Title</td>
+            <td>@u.Type</td>
+            <td>
+                <style>
+                    td:nth-child(4) {
+                        width: 50px;
+                    }
+                </style>
+                <form method="post">
+                    <a asp-action="Details" asp-controller="Collections" asp-route-id="@u.id" class="btn btn-primary btn-sm">@rm.GetString("sView")</a>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+<p></p>
+<section class="jumbotron text-center">
+    <h1>@rm.GetString("sItems")</h1>
+</section>
+<table class="table my-table myTableFourth">
+    <tr>
+        <th>
+            @rm.GetString("sOwner")
+        </th>
+        <th>
+            @rm.GetString("sTitle")
+        </th>
+        <th>
+            @rm.GetString("sTags")
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var u in Model.Items)
+    {
+        <tr>
+            <td>@u.Owner</td>
+            <td>@u.Title</td>
+            <td>
+                @foreach (var tag in u.TagsList)
+                {
+                    <a href="@Url.Action("Search", "Home", new { query = tag })">@tag</a>
+                }
+            </td>
+            <td>
+                <form method="post">
+                    <a asp-action="Details" asp-controller="Items" asp-route-id="@u.Id" class="btn btn-primary btn-sm">@rm.GetString("sView")</a>
+                </form>
+            </td>
+        </tr>
+    }
+
+</table>
